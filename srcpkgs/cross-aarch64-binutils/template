@@ -1,0 +1,41 @@
+# Template file for 'cross-aarch64-binutils'
+pkgname=cross-aarch64-binutils
+version=2.47
+revision=1
+archs="x86_64"
+hostmakedepends="gcc make bison flex gmp-devel libmpc-devel mpfr-devel texinfo
+ isl-devel"
+makedepends="zlib-devel libzstd-devel"
+short_desc="GNU binary utilities - aarch64 architecture"
+maintainer="otolias <p17anto2@gmail.com>"
+license="GPL-3.0-or-later"
+homepage="http://www.gnu.org/software/binutils/"
+#changelog=""
+distfiles="${GNU_SITE}/binutils/binutils-${version}.tar.xz"
+checksum=154ab23b60070e8f27013c22977f1129425d67d1e8acd6e13010e617811e4cff
+
+do_configure() {
+	mkdir build && cd build
+	../configure \
+	  --target=aarch64-elf \
+	  --prefix=/usr/local \
+	  --with-sysroot \
+	  --disable-nls \
+	  --disable-werror \
+	  --enable-default-execstack=no
+}
+
+do_build() {
+	cd build && make ${makejobs}
+}
+
+do_install() {
+	# Install to /usr/local to avoid interferic with native GCC
+	cd build && make DESTDIR="${DESTDIR}" install
+}
+
+post_install() {
+	# Remove man and info pages
+	rm -r "${DESTDIR}/usr/local/share/info"
+	rm -r "${DESTDIR}/usr/local/share/man"
+}

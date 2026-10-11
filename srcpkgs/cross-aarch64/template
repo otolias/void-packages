@@ -1,0 +1,11 @@
+# Template file for 'cross-aarch64'
+pkgname=cross-aarch64
+version=0.1
+revision=1
+archs="x86_64"
+metapackage=yes
+depends="cross-aarch64-binutils cross-aarch64-gcc"
+short_desc="GNU cross bare metal toolchain - aarch64 architecture"
+maintainer="otolias <p17anto2@gmail.com>"
+license="GPL-3.0-or-later"
+homepage="http://gcc.gnu.org"

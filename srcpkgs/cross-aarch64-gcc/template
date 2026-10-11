@@ -1,0 +1,45 @@
+# Template file for 'cross-aarch64-gcc'
+pkgname=cross-aarch64-gcc
+version=16.2.0
+revision=1
+hostmakedepends="tar make bison flex gmp-devel libmpc-devel mpfr-devel texinfo
+ isl-devel"
+makedepends="cross-aarch64-binutils"
+depends="cross-aarch64-binutils"
+short_desc="GNU Compiler Collection - aarch64 architecture"
+maintainer="otolias <p17anto2@gmail.com>"
+license="GPL-3.0-or-later"
+homepage="http://gcc.gnu.org"
+distfiles="${GNU_SITE}/gcc/gcc-${version}/gcc-${version}.tar.xz"
+checksum=e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e
+nopie=yes
+
+do_configure() {
+	mkdir build && cd build
+	../configure \
+	  --target=aarch64-elf \
+	  --prefix=/usr/local \
+	  --disable-nls \
+	  --disable-gcov \
+	  --enable-languages=c \
+	  --enable-initfini-array \
+	  --without-headers
+}
+
+do_build() {
+	cd build
+	make ${makejobs} all-gcc
+	make ${makejobs} all-target-libgcc
+}
+
+do_install() {
+	# Install to /usr/local to avoid interferic with native GCC
+	cd build
+	make DESTDIR="${DESTDIR}" install-gcc
+	make DESTDIR="${DESTDIR}" install-target-libgcc
+}
+
+post_install() {
+	# Remove man pages
+	rm -r "${DESTDIR}/usr/local/share"
+}
